@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Renci.SshNet.Sftp
 {
-    internal class SftpFileReader : ISftpFileReader
+    public class SftpFileReader : ISftpFileReader
     {
         private const int ReadAheadWaitTimeoutInMilliseconds = 1000;
 

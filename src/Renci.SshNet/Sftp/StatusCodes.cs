@@ -1,7 +1,7 @@
 ﻿
 namespace Renci.SshNet.Sftp
 {
-    internal enum StatusCodes : uint
+    public enum StatusCodes : uint
     {
         /// <summary>
         /// SSH_FX_OK

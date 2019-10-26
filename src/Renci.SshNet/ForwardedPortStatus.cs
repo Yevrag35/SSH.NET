@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Renci.SshNet
 {
-    internal class ForwardedPortStatus
+    public class ForwardedPortStatus
     {
         private readonly int _value;
         private readonly string _name;

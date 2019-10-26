@@ -13,7 +13,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Basic factory for creating new services.
     /// </summary>
-    internal partial class ServiceFactory : IServiceFactory
+    public partial class ServiceFactory : IServiceFactory
     {
         /// <summary>
         /// Defines the number of times an authentication attempt with any given <see cref="IAuthenticationMethod"/>

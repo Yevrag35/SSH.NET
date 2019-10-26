@@ -2,7 +2,7 @@
 
 namespace Renci.SshNet
 {
-    internal partial interface IServiceFactory
+    public partial interface IServiceFactory
     {
         /// <summary>
         /// Creates a new <see cref="INetConfSession"/> in a given <see cref="ISession"/>

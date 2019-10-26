@@ -14,7 +14,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Represents SSH command that can be executed.
     /// </summary>
-    public class SshCommand : IDisposable
+    public class SshCommand : IDisposable, ISshCommand
     {
         private ISession _session;
         private readonly Encoding _encoding;
@@ -131,7 +131,7 @@ namespace Renci.SshNet
         /// <param name="commandText">The command text.</param>
         /// <param name="encoding">The encoding to use for the results.</param>
         /// <exception cref="ArgumentNullException">Either <paramref name="session"/>, <paramref name="commandText"/> is <c>null</c>.</exception>
-        internal SshCommand(ISession session, string commandText, Encoding encoding)
+        public SshCommand(ISession session, string commandText, Encoding encoding)
         {
             if (session == null)
                 throw new ArgumentNullException("session");

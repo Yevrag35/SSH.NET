@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Renci.SshNet.Sftp.Responses
 {
-    internal class SftpNameResponse : SftpResponse
+    public sealed class SftpNameResponse : SftpResponse
     {
         public override SftpMessageTypes SftpMessageType
         {

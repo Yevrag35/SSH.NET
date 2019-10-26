@@ -4,7 +4,7 @@ namespace Renci.SshNet.Channels
     /// <summary>
     /// Lists channel types as defined by the protocol.
     /// </summary>
-    internal enum ChannelTypes
+    public enum ChannelTypes
     {
         /// <summary>
         /// session

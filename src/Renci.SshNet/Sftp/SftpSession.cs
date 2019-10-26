@@ -9,7 +9,7 @@ using Renci.SshNet.Sftp.Requests;
 
 namespace Renci.SshNet.Sftp
 {
-    internal class SftpSession : SubsystemSession, ISftpSession
+    public class SftpSession : SubsystemSession, ISftpSession
     {
         internal const int MaximumSupportedVersion = 3;
         private const int MinimumSupportedVersion = 0;

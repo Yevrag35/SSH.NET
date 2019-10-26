@@ -7,7 +7,7 @@ using Renci.SshNet.Messages.Connection;
 
 namespace Renci.SshNet
 {
-    internal interface IConnectionInfoInternal : IConnectionInfo
+    public interface IConnectionInfoInternal : IConnectionInfo
     {
         /// <summary>
         /// Signals that an authentication banner message was received from the server.
@@ -38,7 +38,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Represents remote connection information.
     /// </summary>
-    internal interface IConnectionInfo
+    public interface IConnectionInfo
     {
         /// <summary>
         /// Gets or sets the timeout to used when waiting for a server to acknowledge closing a channel.

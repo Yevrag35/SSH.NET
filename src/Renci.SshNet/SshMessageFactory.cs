@@ -9,7 +9,7 @@ using Renci.SshNet.Messages.Transport;
 
 namespace Renci.SshNet
 {
-    internal class SshMessageFactory
+    public class SshMessageFactory
     {
         private readonly MessageMetadata[] _enabledMessagesByNumber;
         private readonly bool[] _activatedMessagesById;

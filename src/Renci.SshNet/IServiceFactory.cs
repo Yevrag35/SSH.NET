@@ -10,7 +10,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Factory for creating new services.
     /// </summary>
-    internal partial interface IServiceFactory
+    public partial interface IServiceFactory
     {
         IClientAuthentication CreateClientAuthentication();
 

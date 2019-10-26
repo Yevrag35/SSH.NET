@@ -1,6 +1,6 @@
 ﻿namespace Renci.SshNet
 {
-    internal interface IClientAuthentication
+    public interface IClientAuthentication
     {
         void Authenticate(IConnectionInfoInternal connectionInfo, ISession session);
     }

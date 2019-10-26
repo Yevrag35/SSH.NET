@@ -10,7 +10,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Base class for SSH subsystem implementations
     /// </summary>
-    internal abstract class SubsystemSession : ISubsystemSession
+    public abstract class SubsystemSession : ISubsystemSession
     {
         /// <summary>
         /// Holds the number of system wait handles that are returned as the leading entries in the array returned

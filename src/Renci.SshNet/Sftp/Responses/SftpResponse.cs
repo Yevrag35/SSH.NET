@@ -1,6 +1,6 @@
 ﻿namespace Renci.SshNet.Sftp.Responses
 {
-    internal abstract class SftpResponse : SftpMessage
+    public abstract class SftpResponse : SftpMessage
     {
         public uint ResponseId { get; set; }
 

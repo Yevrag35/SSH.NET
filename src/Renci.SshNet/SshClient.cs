@@ -136,7 +136,7 @@ namespace Renci.SshNet
         /// If <paramref name="ownsConnectionInfo"/> is <c>true</c>, then the
         /// connection info will be disposed when this instance is disposed.
         /// </remarks>
-        private SshClient(ConnectionInfo connectionInfo, bool ownsConnectionInfo)
+        public SshClient(ConnectionInfo connectionInfo, bool ownsConnectionInfo)
             : this(connectionInfo, ownsConnectionInfo, new ServiceFactory())
         {
         }
@@ -153,7 +153,7 @@ namespace Renci.SshNet
         /// If <paramref name="ownsConnectionInfo"/> is <c>true</c>, then the
         /// connection info will be disposed when this instance is disposed.
         /// </remarks>
-        internal SshClient(ConnectionInfo connectionInfo, bool ownsConnectionInfo, IServiceFactory serviceFactory)
+        public SshClient(ConnectionInfo connectionInfo, bool ownsConnectionInfo, IServiceFactory serviceFactory)
             : base(connectionInfo, ownsConnectionInfo, serviceFactory)
         {
             _forwardedPorts = new List<ForwardedPort>();

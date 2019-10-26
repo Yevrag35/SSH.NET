@@ -2632,7 +2632,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Represents the result of a wait operations.
     /// </summary>
-    internal enum WaitResult
+    public enum WaitResult
     {
         /// <summary>
         /// The <see cref="WaitHandle"/> was signaled within the specified interval.

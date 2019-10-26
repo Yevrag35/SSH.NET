@@ -5,7 +5,7 @@ using Renci.SshNet.Sftp.Responses;
 
 namespace Renci.SshNet.Sftp
 {
-    internal interface ISftpSession : ISubsystemSession
+    public interface ISftpSession : ISubsystemSession
     {
         /// <summary>
         /// Gets the SFTP protocol version.

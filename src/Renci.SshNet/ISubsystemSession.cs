@@ -7,7 +7,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Base interface for SSH subsystem implementations.
     /// </summary>
-    internal interface ISubsystemSession : IDisposable
+    public interface ISubsystemSession : IDisposable
     {
         /// <summary>
         /// Gets or set the number of seconds to wait for an operation to complete.

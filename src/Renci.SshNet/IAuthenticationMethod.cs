@@ -3,7 +3,7 @@
     /// <summary>
     /// Base interface for authentication of a session using a given method.
     /// </summary>
-    internal interface IAuthenticationMethod
+    public interface IAuthenticationMethod
     {
         /// <summary>
         /// Authenticates the specified session.

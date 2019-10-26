@@ -2,7 +2,7 @@
 
 namespace Renci.SshNet.Sftp
 {
-    internal interface ISftpFileReader : IDisposable
+    public interface ISftpFileReader : IDisposable
     {
         byte[] Read();
     }

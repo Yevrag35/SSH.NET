@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Renci.SshNet.Sftp
 {
-    internal abstract class SftpMessage : SshData
+    public abstract class SftpMessage : SshData
     {
         /// <summary>
         /// Gets the size of the message in bytes.

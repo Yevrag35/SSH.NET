@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace Renci.SshNet.Sftp
 {
-    internal sealed class SftpResponseFactory : ISftpResponseFactory
+    public sealed class SftpResponseFactory : ISftpResponseFactory
     {
         public SftpMessage Create(uint protocolVersion, byte messageType, Encoding encoding)
         {

@@ -2,7 +2,7 @@
 
 namespace Renci.SshNet.NetConf
 {
-    internal interface INetConfSession : ISubsystemSession
+    public interface INetConfSession : ISubsystemSession
     {
         /// <summary>
         /// Gets the NetConf server capabilities.

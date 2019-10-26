@@ -3,7 +3,7 @@
     /// <summary>
     /// List channel open failure reasons defined by the protocol.
     /// </summary>
-    internal enum ChannelOpenFailureReasons : uint
+    public enum ChannelOpenFailureReasons : uint
     {
         /// <summary>
         /// SSH_OPEN_ADMINISTRATIVELY_PROHIBITED

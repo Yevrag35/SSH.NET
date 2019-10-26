@@ -2,7 +2,7 @@
 
 namespace Renci.SshNet.Sftp
 {
-    internal interface ISftpResponseFactory
+    public interface ISftpResponseFactory
     {
         SftpMessage Create(uint protocolVersion, byte messageType, Encoding encoding);
     }
