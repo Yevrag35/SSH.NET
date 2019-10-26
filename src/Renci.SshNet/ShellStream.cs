@@ -13,7 +13,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Contains operation for working with SSH Shell.
     /// </summary>
-    public class ShellStream : Stream
+    public class ShellStream : Stream, IShellStream
     {
         private const string CrLf = "\r\n";
 
@@ -59,7 +59,7 @@ namespace Renci.SshNet
         /// <value>
         /// The number of bytes that will be written to the internal buffer.
         /// </value>
-        internal int BufferSize
+        public int BufferSize
         {
             get { return _bufferSize; }
         }
@@ -87,10 +87,10 @@ namespace Renci.SshNet
             _outgoing = new Queue<byte>();
 
             _channel = _session.CreateChannelSession();
-            _channel.DataReceived += Channel_DataReceived;
-            _channel.Closed += Channel_Closed;
-            _session.Disconnected += Session_Disconnected;
-            _session.ErrorOccured += Session_ErrorOccured;
+            _channel.DataReceived += this.Channel_DataReceived;
+            _channel.Closed += this.Channel_Closed;
+            _session.Disconnected += this.Session_Disconnected;
+            _session.ErrorOccured += this.Session_ErrorOccured;
 
             try
             {
@@ -106,7 +106,7 @@ namespace Renci.SshNet
             }
             catch
             {
-                UnsubscribeFromSessionEvents(session);
+                this.UnsubscribeFromSessionEvents(session);
                 _channel.Dispose();
                 throw;
             }
@@ -215,7 +215,7 @@ namespace Renci.SshNet
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            var i = 0;
+            int i = 0;
 
             lock (_incoming)
             {
@@ -270,11 +270,11 @@ namespace Renci.SshNet
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            foreach (var b in buffer.Take(offset, count))
+            foreach (byte b in buffer.Take(offset, count))
             {
                 if (_outgoing.Count == _bufferSize)
                 {
-                    Flush();
+                    this.Flush();
                 }
 
                 _outgoing.Enqueue(b);
@@ -287,9 +287,9 @@ namespace Renci.SshNet
         /// Expects the specified expression and performs action when one is found.
         /// </summary>
         /// <param name="expectActions">The expected expressions and actions to perform.</param>
-        public void Expect(params ExpectAction[] expectActions)
+        public void Expect(params IExpectAction[] expectActions)
         {
-            Expect(TimeSpan.Zero, expectActions);
+            this.Expect(TimeSpan.Zero, expectActions);
         }
 
         /// <summary>
@@ -297,10 +297,10 @@ namespace Renci.SshNet
         /// </summary>
         /// <param name="timeout">Time to wait for input.</param>
         /// <param name="expectActions">The expected expressions and actions to perform, if the specified time elapsed and expected condition have not met, that method will exit without executing any action.</param>
-        public void Expect(TimeSpan timeout, params ExpectAction[] expectActions)
+        public void Expect(TimeSpan timeout, params IExpectAction[] expectActions)
         {
-            var expectedFound = false;
-            var text = string.Empty;
+            bool expectedFound = false;
+            string text = string.Empty;
 
             do
             {
@@ -313,15 +313,15 @@ namespace Renci.SshNet
 
                     if (text.Length > 0)
                     {
-                        foreach (var expectAction in expectActions)
+                        foreach (IExpectAction expectAction in expectActions)
                         {
-                            var match = expectAction.Expect.Match(text);
+                            Match match = expectAction.Expect.Match(text);
 
                             if (match.Success)
                             {
-                                var result = text.Substring(0, match.Index + match.Length);
+                                string result = text.Substring(0, match.Index + match.Length);
 
-                                for (var i = 0; i < match.Index + match.Length && _incoming.Count > 0; i++)
+                                for (int i = 0; i < match.Index + match.Length && _incoming.Count > 0; i++)
                                 {
                                     //  Remove processed items from the queue
                                     _incoming.Dequeue();
@@ -359,9 +359,9 @@ namespace Renci.SshNet
         /// <returns>
         /// An <see cref="IAsyncResult" /> that references the asynchronous operation.
         /// </returns>
-        public IAsyncResult BeginExpect(params ExpectAction[] expectActions)
+        public IAsyncResult BeginExpect(params IExpectAction[] expectActions)
         {
-            return BeginExpect(TimeSpan.Zero, null, null, expectActions);
+            return this.BeginExpect(TimeSpan.Zero, null, null, expectActions);
         }
 
         /// <summary>
@@ -372,9 +372,9 @@ namespace Renci.SshNet
         /// <returns>
         /// An <see cref="IAsyncResult" /> that references the asynchronous operation.
         /// </returns>
-        public IAsyncResult BeginExpect(AsyncCallback callback, params ExpectAction[] expectActions)
+        public IAsyncResult BeginExpect(AsyncCallback callback, params IExpectAction[] expectActions)
         {
-            return BeginExpect(TimeSpan.Zero, callback, null, expectActions);
+            return this.BeginExpect(TimeSpan.Zero, callback, null, expectActions);
         }
 
         /// <summary>
@@ -386,9 +386,9 @@ namespace Renci.SshNet
         /// <returns>
         /// An <see cref="IAsyncResult" /> that references the asynchronous operation.
         /// </returns>
-        public IAsyncResult BeginExpect(AsyncCallback callback, object state, params ExpectAction[] expectActions)
+        public IAsyncResult BeginExpect(AsyncCallback callback, object state, params IExpectAction[] expectActions)
         {
-            return BeginExpect(TimeSpan.Zero, callback, state, expectActions);
+            return this.BeginExpect(TimeSpan.Zero, callback, state, expectActions);
         }
 
         /// <summary>
@@ -401,9 +401,9 @@ namespace Renci.SshNet
         /// <returns>
         /// An <see cref="IAsyncResult" /> that references the asynchronous operation.
         /// </returns>
-        public IAsyncResult BeginExpect(TimeSpan timeout, AsyncCallback callback, object state, params ExpectAction[] expectActions)
+        public IAsyncResult BeginExpect(TimeSpan timeout, AsyncCallback callback, object state, params IExpectAction[] expectActions)
         {
-            var text = string.Empty;
+            string text = string.Empty;
 
             //  Create new AsyncResult object
             var asyncResult = new ExpectAsyncResult(callback, state);
@@ -427,15 +427,15 @@ namespace Renci.SshNet
 
                             if (text.Length > 0)
                             {
-                                foreach (var expectAction in expectActions)
+                                foreach (IExpectAction expectAction in expectActions)
                                 {
-                                    var match = expectAction.Expect.Match(text);
+                                    Match match = expectAction.Expect.Match(text);
 
                                     if (match.Success)
                                     {
-                                        var result = text.Substring(0, match.Index + match.Length);
+                                        string result = text.Substring(0, match.Index + match.Length);
 
-                                        for (var i = 0; i < match.Index + match.Length && _incoming.Count > 0; i++)
+                                        for (int i = 0; i < match.Index + match.Length && _incoming.Count > 0; i++)
                                         {
                                             //  Remove processed items from the queue
                                             _incoming.Dequeue();
@@ -509,7 +509,7 @@ namespace Renci.SshNet
         /// </returns>
         public string Expect(string text)
         {
-            return Expect(new Regex(Regex.Escape(text)), Session.InfiniteTimeSpan);
+            return this.Expect(new Regex(Regex.Escape(text)), Session.InfiniteTimeSpan);
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace Renci.SshNet
         /// </returns>
         public string Expect(string text, TimeSpan timeout)
         {
-            return Expect(new Regex(Regex.Escape(text)), timeout);
+            return this.Expect(new Regex(Regex.Escape(text)), timeout);
         }
 
         /// <summary>
@@ -534,7 +534,7 @@ namespace Renci.SshNet
         /// </returns>
         public string Expect(Regex regex)
         {
-            return Expect(regex, TimeSpan.Zero);
+            return this.Expect(regex, TimeSpan.Zero);
         }
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace Renci.SshNet
         /// </returns>
         public string Expect(Regex regex, TimeSpan timeout)
         {
-            var text = string.Empty;
+            string text = string.Empty;
 
             while (true)
             {
@@ -559,12 +559,12 @@ namespace Renci.SshNet
                         text = _encoding.GetString(_incoming.ToArray(), 0, _incoming.Count);
                     }
 
-                    var match = regex.Match(text);
+                    Match match = regex.Match(text);
 
                     if (match.Success)
                     {
                         //  Remove processed items from the queue
-                        for (var i = 0; i < match.Index + match.Length && _incoming.Count > 0; i++)
+                        for (int i = 0; i < match.Index + match.Length && _incoming.Count > 0; i++)
                         {
                             _incoming.Dequeue();
                         }
@@ -597,7 +597,7 @@ namespace Renci.SshNet
         /// </returns>
         public string ReadLine()
         {
-            return ReadLine(TimeSpan.Zero);
+            return this.ReadLine(TimeSpan.Zero);
         }
 
         /// <summary>
@@ -609,7 +609,7 @@ namespace Renci.SshNet
         /// </returns>
         public string ReadLine(TimeSpan timeout)
         {
-            var text = string.Empty;
+            string text = string.Empty;
 
             while (true)
             {
@@ -620,17 +620,17 @@ namespace Renci.SshNet
                         text = _encoding.GetString(_incoming.ToArray(), 0, _incoming.Count);
                     }
 
-                    var index = text.IndexOf(CrLf, StringComparison.Ordinal);
+                    int index = text.IndexOf(CrLf, StringComparison.Ordinal);
 
                     if (index >= 0)
                     {
                         text = text.Substring(0, index);
 
                         // determine how many bytes to remove from buffer
-                        var bytesProcessed = _encoding.GetByteCount(text + CrLf);
+                        int bytesProcessed = _encoding.GetByteCount(text + CrLf);
 
                         // remove processed bytes from the queue
-                        for (var i = 0; i < bytesProcessed; i++)
+                        for (int i = 0; i < bytesProcessed; i++)
                             _incoming.Dequeue();
 
                         break;
@@ -690,7 +690,7 @@ namespace Renci.SshNet
                 throw new ObjectDisposedException("ShellStream");
             }
 
-            var data = _encoding.GetBytes(text);
+            byte[] data = _encoding.GetBytes(text);
             _channel.SendData(data);
         }
 
@@ -703,7 +703,7 @@ namespace Renci.SshNet
         /// </remarks>
         public void WriteLine(string line)
         {
-            Write(line + "\r");
+            this.Write(line + "\r");
         }
 
         /// <summary>
@@ -719,12 +719,12 @@ namespace Renci.SshNet
 
             if (disposing)
             {
-                UnsubscribeFromSessionEvents(_session);
+                this.UnsubscribeFromSessionEvents(_session);
 
                 if (_channel != null)
                 {
-                    _channel.DataReceived -= Channel_DataReceived;
-                    _channel.Closed -= Channel_Closed;
+                    _channel.DataReceived -= this.Channel_DataReceived;
+                    _channel.Closed -= this.Channel_Closed;
                     _channel.Dispose();
                     _channel = null;
                 }
@@ -739,7 +739,7 @@ namespace Renci.SshNet
             }
             else
             {
-                UnsubscribeFromSessionEvents(_session);
+                this.UnsubscribeFromSessionEvents(_session);
             }
         }
 
@@ -755,13 +755,13 @@ namespace Renci.SshNet
             if (session == null)
                 return;
 
-            session.Disconnected -= Session_Disconnected;
-            session.ErrorOccured -= Session_ErrorOccured;
+            session.Disconnected -= this.Session_Disconnected;
+            session.ErrorOccured -= this.Session_ErrorOccured;
         }
 
         private void Session_ErrorOccured(object sender, ExceptionEventArgs e)
         {
-            OnRaiseError(e);
+            this.OnRaiseError(e);
         }
 
         private void Session_Disconnected(object sender, EventArgs e)
@@ -773,26 +773,26 @@ namespace Renci.SshNet
         private void Channel_Closed(object sender, ChannelEventArgs e)
         {
             //  TODO:   Do we need to call dispose here ??
-            Dispose();
+            this.Dispose();
         }
 
         private void Channel_DataReceived(object sender, ChannelDataEventArgs e)
         {
             lock (_incoming)
             {
-                foreach (var b in e.Data)
+                foreach (byte b in e.Data)
                     _incoming.Enqueue(b);
             }
 
             if (_dataReceived != null)
                 _dataReceived.Set();
 
-            OnDataReceived(e.Data);
+            this.OnDataReceived(e.Data);
         }
 
         private void OnRaiseError(ExceptionEventArgs e)
         {
-            var handler = ErrorOccurred;
+            EventHandler<ExceptionEventArgs> handler = ErrorOccurred;
             if (handler != null)
             {
                 handler(this, e);
@@ -801,7 +801,7 @@ namespace Renci.SshNet
 
         private void OnDataReceived(byte[] data)
         {
-            var handler = DataReceived;
+            EventHandler<ShellDataEventArgs> handler = DataReceived;
             if (handler != null)
             {
                 handler(this, new ShellDataEventArgs(data));

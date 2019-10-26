@@ -6,7 +6,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Specifies behavior for expected expression
     /// </summary>
-    public class ExpectAction
+    public class ExpectAction : IExpectAction
     {
         /// <summary>
         /// Gets the expected regular expression.

@@ -29,7 +29,7 @@ namespace Renci.SshNet
         /// <value>
         /// The current session.
         /// </value>
-        internal ISession Session { get; private set; }
+        protected ISession Session { get; private set; }
 
         /// <summary>
         /// Gets the factory for creating new services.
@@ -334,7 +334,7 @@ namespace Renci.SshNet
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             DiagnosticAbstraction.Log("Disposing client.");
 

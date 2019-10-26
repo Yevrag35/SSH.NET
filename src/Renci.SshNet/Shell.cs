@@ -9,9 +9,9 @@ using Renci.SshNet.Abstractions;
 namespace Renci.SshNet
 {
     /// <summary>
-    /// Represents instance of the SSH shell object
+    /// Represents instance of the SSH shell object.
     /// </summary>
-    public class Shell : IDisposable
+    public class Shell : IShell
     {
         private readonly ISession _session;
         private IChannelSession _channel;

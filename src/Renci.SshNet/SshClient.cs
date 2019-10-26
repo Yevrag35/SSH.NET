@@ -11,7 +11,7 @@ namespace Renci.SshNet
     /// <summary>
     /// Provides client connection to SSH server.
     /// </summary>
-    public class SshClient : BaseClient
+    public class SshClient : BaseClient, ISshClient
     {
         /// <summary>
         /// Holds the list of forwarded ports
@@ -31,7 +31,7 @@ namespace Renci.SshNet
         /// <summary>
         /// Gets the list of forwarded ports.
         /// </summary>
-        public IEnumerable<ForwardedPort> ForwardedPorts
+        public IReadOnlyCollection<ForwardedPort> ForwardedPorts
         {
             get
             {
@@ -235,6 +235,7 @@ namespace Renci.SshNet
         {
             return CreateCommand(commandText, ConnectionInfo.Encoding);
         }
+        ISshCommand ISshClient.CreateCommand(string commandText) => this.CreateCommand(commandText);
 
         /// <summary>
         /// Creates the command to be executed with specified encoding.
@@ -252,6 +253,7 @@ namespace Renci.SshNet
             ConnectionInfo.Encoding = encoding;
             return new SshCommand(Session, commandText, encoding);
         }
+        ISshCommand ISshClient.CreateCommand(string commandText, Encoding encoding) => this.CreateCommand(commandText, encoding);
 
         /// <summary>
         /// Creates and executes the command.
@@ -274,6 +276,7 @@ namespace Renci.SshNet
             cmd.Execute();
             return cmd;
         }
+        ISshCommand ISshClient.RunCommand(string commandText) => this.RunCommand(commandText);
 
         /// <summary>
         /// Creates the shell.
@@ -298,6 +301,8 @@ namespace Renci.SshNet
 
             return new Shell(Session, input, output, extendedOutput, terminalName, columns, rows, width, height, terminalModes, bufferSize);
         }
+        IShell ISshClient.CreateShell(Stream input, Stream output, Stream extendedOutput, string terminalName, uint columns, uint rows, uint width, uint height, IDictionary<TerminalModes, uint> terminalModes, int bufferSize) =>
+            this.CreateShell(input, output, extendedOutput, terminalName, columns, rows, width, height, terminalModes, bufferSize);
 
         /// <summary>
         /// Creates the shell.
@@ -403,6 +408,8 @@ namespace Renci.SshNet
         {
             return CreateShell(encoding, input, output, extendedOutput, string.Empty, 0, 0, 0, 0, null, 1024);
         }
+        IShell ISshClient.CreateShell(Encoding encoding, string input, Stream output, Stream extendedOutput) =>
+            this.CreateShell(encoding, input, output, extendedOutput);
 
         /// <summary>
         /// Creates the shell stream.
@@ -462,6 +469,8 @@ namespace Renci.SshNet
 
             return ServiceFactory.CreateShellStream(Session, terminalName, columns, rows, width, height, terminalModeValues, bufferSize);
         }
+        IShellStream ISshClient.CreateShellStream(string terminalName, uint columns, uint rows, uint width, uint height, int bufferSize, IDictionary<TerminalModes, uint> terminalModeValues) =>
+            this.CreateShellStream(terminalName, columns, rows, width, height, bufferSize, terminalModeValues);
 
         /// <summary>
         /// Stops forwarded ports.

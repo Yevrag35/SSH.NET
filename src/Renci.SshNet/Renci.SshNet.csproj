@@ -157,11 +157,15 @@
     <Compile Include="IAuthenticationMethod.cs" />
     <Compile Include="IClientAuthentication.cs" />
     <Compile Include="IConnectionInfo.cs" />
+    <Compile Include="IExpectAction.cs" />
     <Compile Include="IForwardedPort.cs" />
     <Compile Include="IRemotePathTransformation.cs" />
     <Compile Include="IServiceFactory.cs" />
     <Compile Include="IServiceFactory.NET.cs" />
     <Compile Include="ISession.cs" />
+    <Compile Include="IShell.cs" />
+    <Compile Include="IShellStream.cs" />
+    <Compile Include="ISshClient.cs" />
     <Compile Include="ISshCommand.cs" />
     <Compile Include="ISubsystemSession.cs" />
     <Compile Include="Messages\Connection\CancelTcpIpForwardGlobalRequestMessage.cs" />
